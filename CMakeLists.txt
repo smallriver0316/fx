@@ -23,6 +23,14 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FAITAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there. You may need to remove CMakeCache.txt.")
 endif()
 
+# added spdlog
+if(NOT TARGET spdlog)
+  find_package(spdlog REQUIRED)
+endif()
+
+# link spdlog library
+target_link_libraries(${PROJECT_NAME} PRIVATE spdlog::spdlog_header_only)
+
 # set include directory
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 

@@ -18,10 +18,19 @@ $ ./fx 123456789
 cmake --version
 cmake version 3.16.3
 
-CMake suite maintained and supported by Kitware (kitware.com/cmake).
-
 g++ --version
 g++ (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
+```
+
+## How to setup
+
+Installing spdlog is required.
+
+```bash
+git clone https://github.com/gabime/spdlog.git
+cd spdlog && mkdir build && cd build
+cmake .. && make -j
+sudo make install
 ```
 
 ## How to build

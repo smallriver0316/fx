@@ -4,6 +4,8 @@
 #include <sstream>
 #include <stdexcept>
 
+#include "spdlog/spdlog.h"
+
 #include "fx/Fx.hpp"
 
 class ConversionException : public std::runtime_error
@@ -38,7 +40,7 @@ int main(int argc, char *argv[])
 {
   if (argc != 2)
   {
-    std::cerr << "Usage: " << argv[0] << " <integer>" << std::endl;
+    spdlog::error("Usage: {} <integer>", argv[0]);
     return 1;
   }
 
@@ -47,7 +49,7 @@ int main(int argc, char *argv[])
     ULLONG value = safeStrtoull(argv[1]);
     if (value == 0 && argv[1][0] != '0')
     {
-      std::cerr << "Invalid number: " << argv[1] << std::endl;
+      spdlog::error("Invalid number: {}", argv[1]);
       return 1;
     }
 
@@ -56,7 +58,7 @@ int main(int argc, char *argv[])
   }
   catch (const ConversionException &e)
   {
-    std::cerr << e.what() << std::endl;
+    spdlog::error(e.what());
     return 1;
   }
 
