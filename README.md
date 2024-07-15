@@ -8,7 +8,7 @@ CLI tool to convert input number to various styles, such as
 Now this provides functionality to only convert input number to English expression.
 
 ```bash
-$ ./fx 123456789
+$ fx 123456789
 123 million 456 thousand and 789
 ```
 
@@ -33,10 +33,13 @@ cmake .. && make -j
 sudo make install
 ```
 
-## How to build
+## How to build and install
 
 ```bash
+# build
 mkdir build && cd build/
 cmake ..
 make
+# install
+sudo make install
 ```

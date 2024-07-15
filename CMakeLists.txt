@@ -24,6 +24,14 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 endif()
 
 # added spdlog
+include(FetchContent)
+FetchContent_Declare(
+  spdlog
+  GIT_REPOSITORY https://github.com/gabime/spdlog
+  GIT_TAG v1.14.1
+  GIT_PROGRESS TRUE)
+FetchContent_MakeAvailable(spdlog)
+
 if(NOT TARGET spdlog)
   find_package(spdlog REQUIRED)
 endif()
@@ -36,3 +44,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/i
 
 # set compiler options
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic)
+
+# install
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
