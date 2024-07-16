@@ -18,8 +18,6 @@ $ ./fx 123456789
 cmake --version
 cmake version 3.16.3
 
-CMake suite maintained and supported by Kitware (kitware.com/cmake).
-
 g++ --version
 g++ (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
 ```
@@ -27,7 +25,10 @@ g++ (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
 ## How to build
 
 ```bash
+# build
 mkdir build && cd build/
 cmake ..
 make
+# install
+sudo make install
 ```

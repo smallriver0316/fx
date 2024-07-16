@@ -7,6 +7,8 @@ class Fx
 public:
   Fx(ULLONG num);
 
+  std::string express1000sSep();
+
   std::string expressEng();
 
 private:

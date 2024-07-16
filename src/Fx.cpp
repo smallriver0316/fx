@@ -4,6 +4,17 @@
 
 Fx::Fx(ULLONG num) : m_number(num) {}
 
+std::string Fx::express1000sSep()
+{
+  std::string result = std::to_string(m_number);
+  int size = result.size();
+  for (int i = 3; i < size; i += 3)
+  {
+    result.insert(size - i, ",");
+  }
+  return result;
+}
+
 std::string Fx::expressEng()
 {
   ULLONG q = m_number, r;
