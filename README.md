@@ -32,3 +32,12 @@ make
 # install
 sudo make install
 ```
+
+## How to run tests
+
+```bash
+cd tests/
+cmake -S . -B build
+cmake --build build
+cd build && ctest
+```
