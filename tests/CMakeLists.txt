@@ -1,24 +1,17 @@
-cmake_minimum_required(VERSION 3.16.3)
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-project(fx-test)
-
-# add googletest
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip)
-FetchContent_MakeAvailable(googletest)
-
-# declare use ctest
-enable_testing()
-
-set(SOURCES
+set(TEST_SOURCES
   src/main.cpp
   src/FxTest.cpp)
-add_executable(${PROJECT_NAME} ${SOURCES})
+
+add_executable(runTests ${TEST_SOURCES})
+
+# add include directory
+target_include_directories(runTests PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 # make link to googletest
-target_link_libraries(${PROJECT_NAME} gtest gtest_main)
+target_link_libraries(runTests gtest gtest_main)
+
 
 include(GoogleTest)
-gtest_discover_tests(${PROJECT_NAME})
+gtest_discover_tests(runTests)

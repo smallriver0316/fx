@@ -1,3 +1,4 @@
+#include "fx/Fx.hpp"
 #include <gtest/gtest.h>
 
 TEST(SampleTest, Test1)
