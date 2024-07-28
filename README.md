@@ -18,16 +18,32 @@ $ ./fx 123456789
 cmake --version
 cmake version 3.16.3
 
-CMake suite maintained and supported by Kitware (kitware.com/cmake).
-
 g++ --version
 g++ (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
 ```
 
 ## How to build
 
+Release build will be done like below.
+
 ```bash
+# build
 mkdir build && cd build/
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make
+# install
+sudo make install
+```
+
+## How to run tests
+
+Unless specify Relase as CMAKE_BUILD_TYPE, unit tests will be enabled.
+
+```bash
+# build
+mkdir build && cd build/
+cmake -DCMAKE_BUILD_TYPE=Debug ..
+make
+# run tests
+ctest
 ```
