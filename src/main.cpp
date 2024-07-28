@@ -52,8 +52,8 @@ int main(int argc, char *argv[])
     }
 
     auto fx = Fx(value);
-    std::cout << fx.express1000sSep() << std::endl;
-    std::cout << "English expression: " << fx.expressEng() << std::endl;
+    std::cout << fx.to1000sSep() << std::endl;
+    std::cout << "English expression: " << fx.toEnglish() << std::endl;
   }
   catch (const ConversionException &e)
   {

@@ -5,11 +5,11 @@ using ULLONG = unsigned long long;
 class Fx
 {
 public:
-  Fx(ULLONG num);
+  explicit Fx(ULLONG num);
 
-  std::string express1000sSep();
+  std::string to1000sSep();
 
-  std::string expressEng();
+  std::string toEnglish();
 
 private:
   ULLONG m_number;

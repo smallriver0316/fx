@@ -4,7 +4,7 @@
 
 Fx::Fx(ULLONG num) : m_number(num) {}
 
-std::string Fx::express1000sSep()
+std::string Fx::to1000sSep()
 {
   std::string result = std::to_string(m_number);
   int size = result.size();
@@ -15,7 +15,7 @@ std::string Fx::express1000sSep()
   return result;
 }
 
-std::string Fx::expressEng()
+std::string Fx::toEnglish()
 {
   ULLONG q = m_number, r;
   std::string result;
