@@ -1,6 +1,8 @@
 # add library
-add_library(fxlib Fx.cpp)
-
+add_library(libfx Fx.cpp Currency.cpp)
 
 # set include directory
-target_include_directories(fxlib PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(libfx PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+# set target link
+target_link_libraries(libfx PRIVATE cpr::cpr)

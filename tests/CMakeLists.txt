@@ -1,6 +1,7 @@
 set(TEST_SOURCES
   src/main.cpp
-  src/FxTest.cpp)
+  src/FxTest.cpp
+  src/CurrencyTest.cpp)
 
 add_executable(runTests ${TEST_SOURCES})
 
@@ -8,7 +9,7 @@ add_executable(runTests ${TEST_SOURCES})
 target_include_directories(runTests PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 # make link to googletest
-target_link_libraries(runTests PRIVATE fxlib gtest gtest_main)
+target_link_libraries(runTests PRIVATE libfx gtest gtest_main)
 
 
 include(GoogleTest)
