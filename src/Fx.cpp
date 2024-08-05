@@ -1,23 +1,39 @@
 #include <cmath>
+#include <iostream>
+#include <stdexcept>
 
+#include <cpr/cpr.h>
+
+#include "fx/Currency.hpp"
 #include "fx/Fx.hpp"
 
 Fx::Fx(ULLONG num) : m_number(num) {}
 
 std::string Fx::to1000sSep()
 {
-  std::string result = std::to_string(m_number);
-  int size = result.size();
+  return to1000sSep(std::to_string(m_number));
+}
+
+std::string Fx::to1000sSep(std::string num_str)
+{
+  int dot_pos = num_str.find(".");
+  int size = dot_pos == std::string::npos ? num_str.size() : dot_pos;
+
   for (int i = 3; i < size; i += 3)
   {
-    result.insert(size - i, ",");
+    num_str.insert(size - i, ",");
   }
-  return result;
+  return num_str;
 }
 
 std::string Fx::toEnglish()
 {
-  ULLONG q = m_number, r;
+  return toEnglish(m_number);
+}
+
+std::string Fx::toEnglish(ULLONG num)
+{
+  ULLONG q = num, r;
   std::string result;
 
   for (int i = 3; q > 0; i += 3)
@@ -61,4 +77,57 @@ std::string Fx::toEnglish()
     }
   }
   return result;
+}
+
+std::string Fx::exchangeCurrency(std::string prev, std::string next)
+{
+  std::string result;
+
+  try
+  {
+    std::string pair_str;
+    if (Currency::isForwardPair(prev, next))
+    {
+      pair_str = Currency::toPairString(prev, next);
+    }
+
+    bool is_reversed = false;
+    if (Currency::isReversePair(prev, next))
+    {
+      is_reversed = true;
+      pair_str = Currency::toPairString(next, prev);
+    }
+
+    if (pair_str.empty())
+    {
+      throw std::runtime_error("Invalid currency pair");
+    }
+
+    auto rate = fetchCurrencyRate(pair_str);
+    auto converted = is_reversed ? 1 / rate * static_cast<float>(m_number)
+                                 : rate * static_cast<float>(m_number);
+
+    result = std::to_string(converted);
+  }
+  catch (const std::exception &e)
+  {
+    std::cerr << e.what() << std::endl;
+  }
+
+  return result;
+}
+
+float Fx::fetchCurrencyRate(std::string pair_str)
+{
+  std::string url = "https://api.excelapi.org/currency/rate?pair=" + pair_str;
+  cpr::Response r = cpr::Get(cpr::Url{url});
+
+  if (r.status_code != 200)
+  {
+    std::cerr << "Error: " << r.status_code << std::endl;
+    std::cerr << r.error.message << std::endl;
+    throw std::runtime_error("Failed to fetch currency rate");
+  }
+
+  return std::stof(r.text);
 }

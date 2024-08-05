@@ -71,8 +71,55 @@ int main(int argc, char **argv)
     }
 
     auto fx = Fx(value);
-    std::cout << fx.to1000sSep() << std::endl;
-    std::cout << "English expression: " << fx.toEnglish() << std::endl;
+    std::cout << "Input:  " << fx.to1000sSep();
+    if (input_currency_opt->count())
+    {
+      std::transform(input_currency.begin(), input_currency.end(), input_currency.begin(), ::toupper);
+      std::cout << " " << input_currency;
+    }
+    std::cout << std::endl;
+
+    // exchange currency
+    std::string result_num;
+
+    if (input_currency_opt->count() && output_currency_opt->count())
+    {
+      if (input_currency.length() != 3)
+      {
+        std::cerr << "Invalid input currency: " << input_currency << std::endl;
+        return 1;
+      }
+      if (output_currency.length() != 3)
+      {
+        std::cerr << "Invalid output currency: " << output_currency << std::endl;
+        return 1;
+      }
+      std::transform(output_currency.begin(), output_currency.end(), output_currency.begin(), ::toupper);
+      result_num = fx.exchangeCurrency(input_currency, output_currency);
+    }
+
+    if (format_opt->count())
+    {
+      if (format == "ENG")
+      {
+        ULLONG result_ull = std::stoull(result_num);
+        std::cout << "Output: " << fx.toEnglish(result_ull);
+      }
+      else
+      {
+        std::cerr << "Invalid format: " << format << std::endl;
+        return 1;
+      }
+    }
+    else
+    {
+      std::cout << "Output: " << fx.to1000sSep(result_num);
+    }
+    if (output_currency_opt->count())
+    {
+      std::cout << " " << output_currency;
+    }
+    std::cout << std::endl;
   }
   catch (const ConversionException &e)
   {
