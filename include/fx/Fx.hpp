@@ -13,8 +13,10 @@ public:
 
   std::string exchangeCurrency(std::string input_currency, std::string output_currency);
 
-private:
-  float fetchCurrencyRate(std::string pair_str);
+protected:
+  // for unit test
+  virtual float fetchCurrencyRate(std::string pair_str);
 
+private:
   ULLONG m_number;
 };

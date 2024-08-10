@@ -43,11 +43,6 @@ int main(int argc, char **argv)
       return 1;
     }
 
-    std::cout << "Input value: " << value << std::endl;
-    std::cout << "Input currency: " << input_currency << std::endl;
-    std::cout << "Output currency: " << output_currency << std::endl;
-    std::cout << "Format: " << format << std::endl;
-
     // create Fx instance
     auto fx = std::make_shared<Fx>(value);
     auto fx_interface = FxInterface(fx, input_currency, output_currency);
@@ -71,7 +66,14 @@ int main(int argc, char **argv)
     }
 
     // output result
-    std::cout << "----------> " << fx_interface.exchange(format_func);
+    auto result = fx_interface.exchange(format_func);
+    if (result.empty())
+    {
+      // something wrong happen
+      return 1;
+    }
+
+    std::cout << "----------> " << result;
 
     if (!fx_interface.getOutputCurrency().empty())
     {
