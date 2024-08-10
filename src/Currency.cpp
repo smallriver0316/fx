@@ -31,18 +31,12 @@ const std::unordered_map<std::string, CurrencyPair> currency_pair_map = {
 
 bool Currency::isForwardPair(std::string prev, std::string next)
 {
-  std::transform(prev.begin(), prev.end(), prev.begin(), ::toupper);
-  std::transform(next.begin(), next.end(), next.begin(), ::toupper);
-
   auto pair = prev + next;
   return pair.length() == 6 && currency_pair_map.find(pair) != currency_pair_map.end();
 }
 
 bool Currency::isReversePair(std::string prev, std::string next)
 {
-  std::transform(prev.begin(), prev.end(), prev.begin(), ::toupper);
-  std::transform(next.begin(), next.end(), next.begin(), ::toupper);
-
   auto pair = next + prev;
   return pair.length() == 6 && currency_pair_map.find(pair) != currency_pair_map.end();
 }

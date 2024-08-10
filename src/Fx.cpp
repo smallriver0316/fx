@@ -9,93 +9,28 @@
 
 Fx::Fx(ULLONG num) : m_number(num) {}
 
-std::string Fx::to1000sSep()
+std::string Fx::getOriginalNumString()
 {
-  return to1000sSep(std::to_string(m_number));
+  return std::to_string(m_number);
 }
 
-std::string Fx::to1000sSep(std::string num_str)
-{
-  int dot_pos = num_str.find(".");
-  int size = dot_pos == std::string::npos ? num_str.size() : dot_pos;
-
-  for (int i = 3; i < size; i += 3)
-  {
-    num_str.insert(size - i, ",");
-  }
-  return num_str;
-}
-
-std::string Fx::toEnglish()
-{
-  return toEnglish(m_number);
-}
-
-std::string Fx::toEnglish(ULLONG num)
-{
-  ULLONG q = num, r;
-  std::string result;
-
-  for (int i = 3; q > 0; i += 3)
-  {
-    r = q % 1000LL;
-    q /= 1000LL;
-
-    if (r > 0)
-    {
-      switch (i)
-      {
-      case 3:
-        if (q > 0)
-        {
-          result = "and " + std::to_string(r);
-        }
-        else
-        {
-          result = std::to_string(r);
-        }
-        break;
-      case 6:
-        result = std::to_string(r) + " thousand " + result;
-        break;
-      case 9:
-        result = std::to_string(r) + " million " + result;
-        break;
-      case 12:
-        result = std::to_string(r) + " billion " + result;
-        break;
-      case 15:
-        result = std::to_string(r) + " trillion " + result;
-        break;
-      case 18:
-        result = std::to_string(r) + " quadrillion " + result;
-        break;
-      case 21:
-        result = std::to_string(r) + " quintillion " + result;
-        break;
-      }
-    }
-  }
-  return result;
-}
-
-std::string Fx::exchangeCurrency(std::string prev, std::string next)
+std::string Fx::exchangeCurrency(std::string input_currency, std::string output_currency)
 {
   std::string result;
 
   try
   {
     std::string pair_str;
-    if (Currency::isForwardPair(prev, next))
+    if (Currency::isForwardPair(input_currency, output_currency))
     {
-      pair_str = Currency::toPairString(prev, next);
+      pair_str = Currency::toPairString(input_currency, output_currency);
     }
 
     bool is_reversed = false;
-    if (Currency::isReversePair(prev, next))
+    if (Currency::isReversePair(input_currency, output_currency))
     {
       is_reversed = true;
-      pair_str = Currency::toPairString(next, prev);
+      pair_str = Currency::toPairString(output_currency, input_currency);
     }
 
     if (pair_str.empty())

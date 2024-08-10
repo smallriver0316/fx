@@ -1,6 +1,6 @@
 set(TEST_SOURCES
   src/main.cpp
-  src/FxTest.cpp
+  src/FormatterTest.cpp
   src/CurrencyTest.cpp)
 
 add_executable(runTests ${TEST_SOURCES})

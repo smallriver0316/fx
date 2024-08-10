@@ -1,4 +1,3 @@
-#include <cerrno>
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
@@ -6,35 +5,8 @@
 
 #include "CLI/CLI.hpp"
 
-#include "fx/Fx.hpp"
-
-class ConversionException : public std::runtime_error
-{
-public:
-  ConversionException(const std::string &msg) : std::runtime_error(msg) {}
-};
-
-ULLONG safeStrtoull(std::string str)
-{
-  errno = 0;
-  char *end;
-  ULLONG value = std::strtoull(str.c_str(), &end, 10);
-
-  if (errno == ERANGE)
-  {
-    std::ostringstream msg;
-    msg << "Out of range value: " << str;
-    throw ConversionException(msg.str());
-  }
-  else if (*end != '\0')
-  {
-    std::ostringstream msg;
-    msg << "Invalid number: " << str;
-    throw ConversionException(msg.str());
-  }
-
-  return value;
-}
+#include "fx/Formatter.hpp"
+#include "fx/FxInterface.hpp"
 
 int main(int argc, char **argv)
 {
@@ -46,15 +18,15 @@ int main(int argc, char **argv)
 
   // add format option
   std::string format;
-  CLI::Option *format_opt = app.add_option<std::string>("-f, --format", format, "Format to use for output");
+  app.add_option<std::string>("-f, --format", format, "Format to use for output");
 
   // add input-currency option
   std::string input_currency;
-  CLI::Option *input_currency_opt = app.add_option<std::string>("-i, --input-currency", input_currency, "Input currency");
+  app.add_option<std::string>("-i, --input-currency", input_currency, "Input currency");
 
   // add output-currency option
   std::string output_currency;
-  CLI::Option *output_currency_opt = app.add_option<std::string>("-o, --output-currency", output_currency, "Output currency");
+  app.add_option<std::string>("-o, --output-currency", output_currency, "Output currency");
 
   std::string input_value;
   app.add_option<std::string>("input_value", input_value, "Input value")->required();
@@ -63,61 +35,47 @@ int main(int argc, char **argv)
 
   try
   {
-    ULLONG value = safeStrtoull(input_value);
-    if (value == 0 && argv[1][0] != '0')
+    // read value
+    ULLONG value = Formatter::safeStrToUll(input_value);
+    if (value == 0)
     {
       std::cerr << "Invalid number: " << argv[1] << std::endl;
       return 1;
     }
 
-    auto fx = Fx(value);
-    std::cout << "Input:  " << fx.to1000sSep();
-    if (input_currency_opt->count())
+    std::cout << "Input value: " << value << std::endl;
+    std::cout << "Input currency: " << input_currency << std::endl;
+    std::cout << "Output currency: " << output_currency << std::endl;
+    std::cout << "Format: " << format << std::endl;
+
+    // create Fx instance
+    auto fx = std::make_shared<Fx>(value);
+    auto fx_interface = FxInterface(fx, input_currency, output_currency);
+
+    // input value
+    std::cout << "YOUR INPUT: " << Formatter::to1000sSep(fx->getOriginalNumString());
+    if (!fx_interface.getInputCurrency().empty())
     {
-      std::transform(input_currency.begin(), input_currency.end(), input_currency.begin(), ::toupper);
-      std::cout << " " << input_currency;
+      std::cout << " " << fx_interface.getInputCurrency();
     }
     std::cout << std::endl;
 
-    // exchange currency
-    std::string result_num;
-
-    if (input_currency_opt->count() && output_currency_opt->count())
+    std::string (*format_func)(std::string) = nullptr;
+    if (format == "ENG")
     {
-      if (input_currency.length() != 3)
-      {
-        std::cerr << "Invalid input currency: " << input_currency << std::endl;
-        return 1;
-      }
-      if (output_currency.length() != 3)
-      {
-        std::cerr << "Invalid output currency: " << output_currency << std::endl;
-        return 1;
-      }
-      std::transform(output_currency.begin(), output_currency.end(), output_currency.begin(), ::toupper);
-      result_num = fx.exchangeCurrency(input_currency, output_currency);
-    }
-
-    if (format_opt->count())
-    {
-      if (format == "ENG")
-      {
-        ULLONG result_ull = std::stoull(result_num);
-        std::cout << "Output: " << fx.toEnglish(result_ull);
-      }
-      else
-      {
-        std::cerr << "Invalid format: " << format << std::endl;
-        return 1;
-      }
+      format_func = &Formatter::toEnglish;
     }
     else
     {
-      std::cout << "Output: " << fx.to1000sSep(result_num);
+      format_func = &Formatter::to1000sSep;
     }
-    if (output_currency_opt->count())
+
+    // output result
+    std::cout << "----------> " << fx_interface.exchange(format_func);
+
+    if (!fx_interface.getOutputCurrency().empty())
     {
-      std::cout << " " << output_currency;
+      std::cout << " " << fx_interface.getOutputCurrency();
     }
     std::cout << std::endl;
   }

@@ -32,6 +32,8 @@ class Currency
 {
 public:
   static std::string toPairString(std::string prev, std::string next);
+
   static bool isForwardPair(std::string prev, std::string next);
+
   static bool isReversePair(std::string prev, std::string next);
 };

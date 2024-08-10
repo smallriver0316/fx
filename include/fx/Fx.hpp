@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 
 using ULLONG = unsigned long long;
@@ -7,15 +9,9 @@ class Fx
 public:
   explicit Fx(ULLONG num);
 
-  std::string to1000sSep();
+  std::string getOriginalNumString();
 
-  std::string to1000sSep(std::string num_str);
-
-  std::string toEnglish();
-
-  std::string toEnglish(ULLONG num);
-
-  std::string exchangeCurrency(std::string prev, std::string next);
+  std::string exchangeCurrency(std::string input_currency, std::string output_currency);
 
 private:
   float fetchCurrencyRate(std::string pair_str);
