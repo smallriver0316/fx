@@ -1,59 +1,94 @@
-#include <cerrno>
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
 
-#include "fx/Fx.hpp"
+#include "CLI/CLI.hpp"
 
-class ConversionException : public std::runtime_error
+#include "fx/Formatter.hpp"
+#include "fx/FxInterface.hpp"
+
+int main(int argc, char **argv)
 {
-public:
-  ConversionException(const std::string &msg) : std::runtime_error(msg) {}
-};
+  CLI::App app{"Exchange a given number with specified format"};
+  argv = app.ensure_utf8(argv);
 
-ULLONG safeStrtoull(const char *str)
-{
-  errno = 0;
-  char *end;
-  ULLONG value = std::strtoull(str, &end, 10);
+  // add version output
+  app.set_version_flag("-v,--version", "0.1.0");
 
-  if (errno == ERANGE)
-  {
-    std::ostringstream msg;
-    msg << "Out of range value: " << str;
-    throw ConversionException(msg.str());
-  }
-  else if (*end != '\0')
-  {
-    std::ostringstream msg;
-    msg << "Invalid number: " << str;
-    throw ConversionException(msg.str());
-  }
+  // add format option
+  std::string format;
+  app.add_option<std::string>(
+      "-f, --format",
+      format,
+      "Format to use for output, such as ENG, default is the style formatted with thousand separator");
 
-  return value;
-}
+  // add input-currency option
+  std::string input_currency;
+  app.add_option<std::string>(
+      "-i, --input-currency",
+      input_currency,
+      "Input currency, such as USD, EUR, JPY, and so on");
 
-int main(int argc, char *argv[])
-{
-  if (argc != 2)
-  {
-    std::cerr << "Usage: " << argv[0] << " <integer>" << std::endl;
-    return 1;
-  }
+  // add output-currency option
+  std::string output_currency;
+  app.add_option<std::string>(
+      "-o, --output-currency",
+      output_currency,
+      "Output currency, such as USD, EUR, JPY, and so on");
+
+  std::string input_value;
+  app.add_option<std::string>("input_value", input_value, "Input value")->required();
+
+  CLI11_PARSE(app, argc, argv);
 
   try
   {
-    ULLONG value = safeStrtoull(argv[1]);
-    if (value == 0 && argv[1][0] != '0')
+    // read value
+    ULLONG value = Formatter::safeStrToUll(input_value);
+    if (value == 0)
     {
       std::cerr << "Invalid number: " << argv[1] << std::endl;
       return 1;
     }
 
-    auto fx = Fx(value);
-    std::cout << fx.to1000sSep() << std::endl;
-    std::cout << "English expression: " << fx.toEnglish() << std::endl;
+    // create Fx instance
+    auto fx = std::make_shared<Fx>(value);
+    auto fx_interface = FxInterface(fx, input_currency, output_currency);
+
+    // input value
+    std::cout << "YOUR INPUT: " << Formatter::to1000sSep(fx->getOriginalNumString());
+    if (!fx_interface.getInputCurrency().empty())
+    {
+      std::cout << " " << fx_interface.getInputCurrency();
+    }
+    std::cout << std::endl;
+
+    std::string (*format_func)(std::string) = nullptr;
+    if (format == "ENG")
+    {
+      format_func = &Formatter::toEnglish;
+    }
+    else
+    {
+      format_func = &Formatter::to1000sSep;
+    }
+
+    // output result
+    auto result = fx_interface.exchange(format_func);
+    if (result.empty())
+    {
+      // something wrong happen
+      return 1;
+    }
+
+    std::cout << "----------> " << result;
+
+    if (!fx_interface.getOutputCurrency().empty())
+    {
+      std::cout << " " << fx_interface.getOutputCurrency();
+    }
+    std::cout << std::endl;
   }
   catch (const ConversionException &e)
   {

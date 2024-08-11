@@ -1,14 +1,42 @@
-#include "fx/Fx.hpp"
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-TEST(FxTest, given_number_then_convert_to_expression_with_thousands_separator)
+#include "fx/Fx.hpp"
+#include "mock/MockFx.hpp"
+
+using ::testing::Return;
+
+TEST(FxTest, fx_instance_can_return_original_number_string)
 {
-  auto fx = Fx(12345678901234567890ULL);
-  EXPECT_EQ(fx.to1000sSep(), "12,345,678,901,234,567,890");
+  auto fx = MockFx(123456LL);
+  EXPECT_EQ(fx.getOriginalNumString(), "123456");
 }
 
-TEST(FxTest, given_number_then_convert_to_english_expression)
+TEST(FxTest, given_currency_pair_then_exchange_value)
 {
-  auto fx = Fx(12345678901234567890ULL);
-  EXPECT_EQ(fx.toEnglish(), "12 quintillion 345 quadrillion 678 trillion 901 billion 234 million 567 thousand and 890");
+  auto fx = MockFx(100LL);
+  EXPECT_CALL(fx, fetchCurrencyRate("usd-jpy"))
+      .Times(1)
+      .WillOnce(Return(150.0f));
+
+  EXPECT_EQ(fx.exchangeCurrency("USD", "JPY"), "15000.000000");
+}
+
+TEST(FxTest, given_currency_pair_but_only_reversed_pair_exists_then_exchange_value)
+{
+  auto fx = MockFx(15000LL);
+  EXPECT_CALL(fx, fetchCurrencyRate("usd-jpy"))
+      .Times(1)
+      .WillOnce(Return(150.0f));
+
+  EXPECT_EQ(fx.exchangeCurrency("JPY", "USD"), "100.000000");
+}
+
+TEST(FxTest, given_invalid_currency_pair_then_return_empty_string)
+{
+  auto fx = MockFx(15000LL);
+  EXPECT_CALL(fx, fetchCurrencyRate("usd-cny"))
+      .Times(0);
+
+  EXPECT_EQ(fx.exchangeCurrency("USD", "CNY"), "");
 }
