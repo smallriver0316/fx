@@ -20,19 +20,23 @@ ULLONG Formatter::safeStrToUll(std::string num_str)
 
 std::string Formatter::to1000sSep(std::string num_str)
 {
-  int dot_pos = num_str.find(".");
-  int size = dot_pos == std::string::npos ? num_str.size() : dot_pos;
+  auto split_nums = splitNumStr(num_str);
+  auto integer_part = split_nums.first;
+  int size = integer_part.size();
 
   for (int i = 3; i < size; i += 3)
   {
-    num_str.insert(size - i, ",");
+    integer_part.insert(size - i, ",");
   }
-  return num_str;
+
+  return integer_part + (split_nums.second != "" ? "." + split_nums.second : "");
 }
 
 std::string Formatter::toEnglish(std::string num_str)
 {
-  ULLONG q = safeStrToUll(num_str), r;
+  auto split_nums = splitNumStr(num_str);
+
+  ULLONG q = safeStrToUll(split_nums.first), r;
   std::string result;
 
   for (int i = 3; q > 0; i += 3)
@@ -75,5 +79,25 @@ std::string Formatter::toEnglish(std::string num_str)
       }
     }
   }
-  return result;
+
+  return result + (split_nums.second != "" ? "." + split_nums.second : "");
+}
+
+std::pair<std::string, std::string> Formatter::splitNumStr(std::string num_str)
+{
+  int dot_pos = num_str.find(".");
+  std::string integer_part, decimal_part = "";
+  if (dot_pos != std::string::npos)
+  {
+    integer_part = num_str.substr(0, dot_pos);
+    decimal_part = num_str.length() - dot_pos > 3
+                       ? num_str.substr(dot_pos + 1, 3)
+                       : num_str.substr(dot_pos + 1);
+  }
+  else
+  {
+    integer_part = num_str;
+  }
+
+  return std::make_pair(integer_part, decimal_part);
 }

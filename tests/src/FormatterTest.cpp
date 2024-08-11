@@ -27,3 +27,10 @@ TEST(FormatterTest, given_number_then_convert_to_english_expression)
       Formatter::toEnglish("12345678901234567890"),
       "12 quintillion 345 quadrillion 678 trillion 901 billion 234 million 567 thousand and 890");
 }
+
+TEST(FormatterTest, given_number_with_decimal_part_then_split_into_integer_and_decimal_parts)
+{
+  auto result = Formatter::splitNumStr("1234567890.1234567890");
+  EXPECT_EQ(result.first, "1234567890");
+  EXPECT_EQ(result.second, "123");
+}

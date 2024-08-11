@@ -1,6 +1,7 @@
 #include <cerrno>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 using ULLONG = unsigned long long;
 
@@ -18,4 +19,6 @@ public:
   static std::string toEnglish(std::string num_str);
 
   static std::string to1000sSep(std::string num_str);
+
+  static std::pair<std::string, std::string> splitNumStr(std::string num_str);
 };
