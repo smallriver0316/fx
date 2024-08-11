@@ -42,5 +42,5 @@ TEST(FxInterfaceTest, given_currency_pair_then_return_exchanged_value)
       .WillOnce(::testing::Return(1));
 
   auto fx_interface = FxInterface(fx, "usd", "jpy");
-  EXPECT_EQ(fx_interface.exchange(&Formatter::to1000sSep), "123,456.000");
+  EXPECT_EQ(fx_interface.exchange(&Formatter::to1000sSep), "123,456");
 }

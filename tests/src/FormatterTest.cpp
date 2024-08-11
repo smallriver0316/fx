@@ -34,3 +34,9 @@ TEST(FormatterTest, given_number_with_decimal_part_then_split_into_integer_and_d
   EXPECT_EQ(result.first, "1234567890");
   EXPECT_EQ(result.second, "123");
 }
+
+TEST(FormatterTest, given_number_with_decimal_part_and_trailing_zeros_then_cut_off_them_and_return)
+{
+  auto result = Formatter::splitNumStr("1234567890.10000000");
+  EXPECT_EQ(result.second, "1");
+}

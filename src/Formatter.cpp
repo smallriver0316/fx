@@ -93,6 +93,19 @@ std::pair<std::string, std::string> Formatter::splitNumStr(std::string num_str)
     decimal_part = num_str.length() - dot_pos > 3
                        ? num_str.substr(dot_pos + 1, 3)
                        : num_str.substr(dot_pos + 1);
+
+    // cut off trailing zeros
+    for (int i = decimal_part.size() - 1; i >= 0; i--)
+    {
+      if (decimal_part[i] == '0')
+      {
+        decimal_part.pop_back();
+      }
+      else
+      {
+        break;
+      }
+    }
   }
   else
   {
