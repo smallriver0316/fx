@@ -10,7 +10,7 @@
 
 int main(int argc, char **argv)
 {
-  CLI::App app{"Exchange given number with specified format"};
+  CLI::App app{"Exchange a given number with specified format"};
   argv = app.ensure_utf8(argv);
 
   // add version output
@@ -18,15 +18,24 @@ int main(int argc, char **argv)
 
   // add format option
   std::string format;
-  app.add_option<std::string>("-f, --format", format, "Format to use for output");
+  app.add_option<std::string>(
+      "-f, --format",
+      format,
+      "Format to use for output, such as ENG, default is the style formatted with thousand separator");
 
   // add input-currency option
   std::string input_currency;
-  app.add_option<std::string>("-i, --input-currency", input_currency, "Input currency");
+  app.add_option<std::string>(
+      "-i, --input-currency",
+      input_currency,
+      "Input currency, such as USD, EUR, JPY, and so on");
 
   // add output-currency option
   std::string output_currency;
-  app.add_option<std::string>("-o, --output-currency", output_currency, "Output currency");
+  app.add_option<std::string>(
+      "-o, --output-currency",
+      output_currency,
+      "Output currency, such as USD, EUR, JPY, and so on");
 
   std::string input_value;
   app.add_option<std::string>("input_value", input_value, "Input value")->required();
