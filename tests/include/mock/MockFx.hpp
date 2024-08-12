@@ -7,4 +7,6 @@ public:
   MockFx(ULLONG num) : Fx(num) {}
 
   MOCK_METHOD(float, fetchCurrencyRate, (std::string), (override));
+
+  MOCK_METHOD(float, fetchCryptoRate, (std::string), (override));
 };

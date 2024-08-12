@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     auto fx = std::make_shared<Fx>(value);
     auto fx_interface = FxInterface(fx, input_currency, output_currency);
 
-    // input value
+    // print input value
     std::cout << "YOUR INPUT: " << Formatter::to1000sSep(fx->getOriginalNumString());
     if (!fx_interface.getInputCurrency().empty())
     {
@@ -64,6 +64,7 @@ int main(int argc, char **argv)
     }
     std::cout << std::endl;
 
+    // select formatter
     std::string (*format_func)(std::string) = nullptr;
     if (format == "ENG")
     {
@@ -90,7 +91,7 @@ int main(int argc, char **argv)
       format_func = &Formatter::to1000sSep;
     }
 
-    // output result
+    // print output result
     auto result = fx_interface.exchange(format_func);
     if (result.empty())
     {
