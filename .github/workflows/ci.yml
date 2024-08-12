@@ -1,0 +1,26 @@
+name: build and test
+run-name: ${{ github.actor }} is testing out Github Actions 🚀
+on:
+  pull_request:
+    types:
+      - synchronize
+    branches:
+      - main
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v4
+
+      - name: Build Project
+        uses: threeal/cmake-action@v2.0.0
+        with:
+          options: |
+            CMAKE_BUILD_TYPE=Debug
+            BUILD_TESTS=ON
+
+      - name: Test Project
+        run: |
+          cd build
+          ctest --verbose
