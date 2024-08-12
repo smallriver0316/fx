@@ -5,9 +5,18 @@
 #include <cpr/cpr.h>
 
 #include "fx/Currency.hpp"
+#include "fx/Formatter.hpp"
 #include "fx/Fx.hpp"
 
-Fx::Fx(ULLONG num) : m_number(num) {}
+Fx::Fx(std::string num_str)
+{
+  ULLONG value = Formatter::safeStrToUll(num_str);
+  if (value == 0)
+  {
+    throw ConversionException("Failed to read value");
+  }
+  m_number = value;
+}
 
 std::string Fx::getOriginalNumString()
 {
@@ -53,8 +62,8 @@ std::string Fx::exchangeCurrency(std::string input_currency, std::string output_
     }
 
     auto rate = is_crypto ? fetchCryptoRate(pair_str) : fetchCurrencyRate(pair_str);
-    auto converted = is_reversed ? 1 / rate * static_cast<float>(m_number)
-                                 : rate * static_cast<float>(m_number);
+    auto converted = is_reversed ? 1 / rate * static_cast<long double>(m_number)
+                                 : rate * static_cast<long double>(m_number);
 
     result = std::to_string(converted);
   }
@@ -66,19 +75,19 @@ std::string Fx::exchangeCurrency(std::string input_currency, std::string output_
   return result;
 }
 
-float Fx::fetchCurrencyRate(std::string pair_str)
+double Fx::fetchCurrencyRate(std::string pair_str)
 {
   std::string url = "https://api.excelapi.org/currency/rate?pair=" + pair_str;
   return fetchRate(url);
 }
 
-float Fx::fetchCryptoRate(std::string pair_str)
+double Fx::fetchCryptoRate(std::string pair_str)
 {
   std::string url = "https://api.excelapi.org/crypto/rate?pair=" + pair_str;
   return fetchRate(url);
 }
 
-float Fx::fetchRate(std::string url)
+double Fx::fetchRate(std::string url)
 {
   cpr::Response r = cpr::Get(cpr::Url{url});
 
@@ -89,5 +98,5 @@ float Fx::fetchRate(std::string url)
     throw std::runtime_error("Failed to fetch currency rate");
   }
 
-  return std::stof(r.text);
+  return std::stod(r.text);
 }

@@ -7,7 +7,7 @@ using ULLONG = unsigned long long;
 class Fx
 {
 public:
-  explicit Fx(ULLONG num);
+  explicit Fx(std::string num_str);
 
   std::string getOriginalNumString();
 
@@ -15,11 +15,11 @@ public:
 
 protected:
   // set virtual for unit test
-  virtual float fetchCurrencyRate(std::string pair_str);
+  virtual double fetchCurrencyRate(std::string pair_str);
 
-  virtual float fetchCryptoRate(std::string pair_str);
+  virtual double fetchCryptoRate(std::string pair_str);
 
-  virtual float fetchRate(std::string url);
+  virtual double fetchRate(std::string url);
 
 private:
   ULLONG m_number;

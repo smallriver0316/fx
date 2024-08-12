@@ -44,16 +44,8 @@ int main(int argc, char **argv)
 
   try
   {
-    // read value
-    ULLONG value = Formatter::safeStrToUll(input_value);
-    if (value == 0)
-    {
-      std::cerr << "Invalid number: " << argv[1] << std::endl;
-      return 1;
-    }
-
     // create Fx instance
-    auto fx = std::make_shared<Fx>(value);
+    auto fx = std::make_shared<Fx>(input_value);
     auto fx_interface = FxInterface(fx, input_currency, output_currency);
 
     // print input value
