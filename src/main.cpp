@@ -69,6 +69,22 @@ int main(int argc, char **argv)
     {
       format_func = &Formatter::toEnglish;
     }
+    else if (format == "DEU" || format == "GER")
+    {
+      format_func = &Formatter::toGerman;
+    }
+    else if (format == "SPA")
+    {
+      format_func = &Formatter::toSpanish;
+    }
+    else if (format == "FRA")
+    {
+      format_func = &Formatter::toFrench;
+    }
+    else if (format == "JPN")
+    {
+      format_func = &Formatter::toJapanese;
+    }
     else
     {
       format_func = &Formatter::to1000sSep;
