@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project
-        uses: actions/checkout@4.1.7
+        uses: actions/checkout@v4
 
       - name: Build Project
-        uses: threeal/cmake-actions@v2.0.0
+        uses: threeal/cmake-action@v2.0.0
 
       - name: Test Project
         run: |
