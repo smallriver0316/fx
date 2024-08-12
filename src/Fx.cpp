@@ -21,15 +21,29 @@ std::string Fx::exchangeCurrency(std::string input_currency, std::string output_
   try
   {
     std::string pair_str;
-    if (Currency::isForwardPair(input_currency, output_currency))
+    bool is_reversed = false;
+    bool is_crypto = false;
+    if (Currency::isForwardCurrencyPair(input_currency, output_currency))
     {
       pair_str = Currency::toPairString(input_currency, output_currency);
     }
 
-    bool is_reversed = false;
-    if (Currency::isReversePair(input_currency, output_currency))
+    if (Currency::isReverseCurrencyPair(input_currency, output_currency))
     {
       is_reversed = true;
+      pair_str = Currency::toPairString(output_currency, input_currency);
+    }
+
+    if (Currency::isForwardCryptoPair(input_currency, output_currency))
+    {
+      is_crypto = true;
+      pair_str = Currency::toPairString(input_currency, output_currency);
+    }
+
+    if (Currency::isReverseCryptoPair(input_currency, output_currency))
+    {
+      is_reversed = true;
+      is_crypto = true;
       pair_str = Currency::toPairString(output_currency, input_currency);
     }
 
@@ -38,7 +52,7 @@ std::string Fx::exchangeCurrency(std::string input_currency, std::string output_
       throw std::runtime_error("Invalid currency pair");
     }
 
-    auto rate = fetchCurrencyRate(pair_str);
+    auto rate = is_crypto ? fetchCryptoRate(pair_str) : fetchCurrencyRate(pair_str);
     auto converted = is_reversed ? 1 / rate * static_cast<float>(m_number)
                                  : rate * static_cast<float>(m_number);
 
@@ -55,6 +69,17 @@ std::string Fx::exchangeCurrency(std::string input_currency, std::string output_
 float Fx::fetchCurrencyRate(std::string pair_str)
 {
   std::string url = "https://api.excelapi.org/currency/rate?pair=" + pair_str;
+  return fetchRate(url);
+}
+
+float Fx::fetchCryptoRate(std::string pair_str)
+{
+  std::string url = "https://api.excelapi.org/crypto/rate?pair=" + pair_str;
+  return fetchRate(url);
+}
+
+float Fx::fetchRate(std::string url)
+{
   cpr::Response r = cpr::Get(cpr::Url{url});
 
   if (r.status_code != 200)
