@@ -7,7 +7,7 @@ using ULLONG = unsigned long long;
 class Fx
 {
 public:
-  explicit Fx(std::string num_str);
+  explicit Fx(std::string const &num_str);
 
   std::string getOriginalNumString();
 
@@ -22,5 +22,7 @@ protected:
   virtual double fetchRate(std::string url);
 
 private:
-  ULLONG m_number;
+  std::string m_original_num_str;
+  ULLONG m_integer_part;
+  long double m_decimal_part;
 };

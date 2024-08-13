@@ -8,19 +8,28 @@
 #include "fx/Formatter.hpp"
 #include "fx/Fx.hpp"
 
-Fx::Fx(std::string num_str)
+Fx::Fx(std::string const &num_str) : m_original_num_str(num_str)
 {
-  ULLONG value = Formatter::safeStrToUll(num_str);
-  if (value == 0)
+  int dot_pos = num_str.find('.');
+  std::string integer_part, decimal_part;
+  if (dot_pos != std::string::npos)
   {
-    throw ConversionException("Failed to read value");
+    integer_part = num_str.substr(0, dot_pos);
+    decimal_part = num_str.substr(dot_pos + 1);
   }
-  m_number = value;
+  else
+  {
+    integer_part = num_str;
+    decimal_part = "0";
+  }
+
+  m_integer_part = Formatter::safeStrToUll(integer_part);
+  m_decimal_part = std::stold("0." + decimal_part);
 }
 
 std::string Fx::getOriginalNumString()
 {
-  return std::to_string(m_number);
+  return m_original_num_str;
 }
 
 std::string Fx::exchangeCurrency(std::string input_currency, std::string output_currency)
@@ -62,8 +71,8 @@ std::string Fx::exchangeCurrency(std::string input_currency, std::string output_
     }
 
     auto rate = is_crypto ? fetchCryptoRate(pair_str) : fetchCurrencyRate(pair_str);
-    auto converted = is_reversed ? 1 / rate * static_cast<long double>(m_number)
-                                 : rate * static_cast<long double>(m_number);
+    auto converted = is_reversed ? (1 / rate * static_cast<long double>(m_integer_part) + 1 / rate * m_decimal_part)
+                                 : rate * (static_cast<long double>(m_integer_part) + m_decimal_part);
 
     result = std::to_string(converted);
   }

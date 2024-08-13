@@ -55,17 +55,17 @@ $ fx -f JPN 123456789
 # exchange by currency rate
 ## JPY/USD
 $ fx -i JPY -o USD 123456789
-YOUR INPUT: 123,456,789 JPY
+YOUR INPUT: 123456789 JPY
 ----------> 836,484.812 USD
 
 ## USD/EUR
-$ fx -i USD -o JPY 123456789
-YOUR INPUT: 123,456,789 USD
+$ fx -i USD -o EUR 123456789
+YOUR INPUT: 123456789 USD
 ----------> 113,045,320 EUR
 
 ## NZD/USD with English format
 $ fx -i -i NZD -o USD -f ENG 123456789
-YOUR INPUT: 123,456,789 NZD
+YOUR INPUT: 123456789 NZD
 ----------> 74 million 333 thousand and 336 USD
 ```
 
