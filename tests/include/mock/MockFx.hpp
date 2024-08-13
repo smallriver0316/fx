@@ -4,7 +4,9 @@
 class MockFx : public Fx
 {
 public:
-  MockFx(ULLONG num) : Fx(num) {}
+  MockFx(std::string num_str) : Fx(num_str) {}
 
-  MOCK_METHOD(float, fetchCurrencyRate, (std::string), (override));
+  MOCK_METHOD(double, fetchCurrencyRate, (std::string), (override));
+
+  MOCK_METHOD(double, fetchCryptoRate, (std::string), (override));
 };

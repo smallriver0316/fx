@@ -44,37 +44,46 @@ int main(int argc, char **argv)
 
   try
   {
-    // read value
-    ULLONG value = Formatter::safeStrToUll(input_value);
-    if (value == 0)
-    {
-      std::cerr << "Invalid number: " << argv[1] << std::endl;
-      return 1;
-    }
-
     // create Fx instance
-    auto fx = std::make_shared<Fx>(value);
+    auto fx = std::make_shared<Fx>(input_value);
     auto fx_interface = FxInterface(fx, input_currency, output_currency);
 
-    // input value
-    std::cout << "YOUR INPUT: " << Formatter::to1000sSep(fx->getOriginalNumString());
+    // print input value
+    std::cout << "YOUR INPUT: " << Formatter::to1000sSepAsIs(fx->getOriginalNumString());
     if (!fx_interface.getInputCurrency().empty())
     {
       std::cout << " " << fx_interface.getInputCurrency();
     }
     std::cout << std::endl;
 
+    // select formatter
     std::string (*format_func)(std::string) = nullptr;
     if (format == "ENG")
     {
       format_func = &Formatter::toEnglish;
+    }
+    else if (format == "DEU" || format == "GER")
+    {
+      format_func = &Formatter::toGerman;
+    }
+    else if (format == "SPA")
+    {
+      format_func = &Formatter::toSpanish;
+    }
+    else if (format == "FRA")
+    {
+      format_func = &Formatter::toFrench;
+    }
+    else if (format == "JPN")
+    {
+      format_func = &Formatter::toJapanese;
     }
     else
     {
       format_func = &Formatter::to1000sSep;
     }
 
-    // output result
+    // print output result
     auto result = fx_interface.exchange(format_func);
     if (result.empty())
     {

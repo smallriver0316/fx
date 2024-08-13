@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cerrno>
 #include <stdexcept>
 #include <string>
@@ -16,9 +18,19 @@ class Formatter
 public:
   static ULLONG safeStrToUll(std::string num_str);
 
-  static std::string toEnglish(std::string num_str);
+  static std::pair<std::string, std::string> splitNumStr(std::string num_str);
 
   static std::string to1000sSep(std::string num_str);
 
-  static std::pair<std::string, std::string> splitNumStr(std::string num_str);
+  static std::string to1000sSepAsIs(std::string num_str);
+
+  static std::string toEnglish(std::string num_str);
+
+  static std::string toGerman(std::string num_str);
+
+  static std::string toSpanish(std::string num_str);
+
+  static std::string toJapanese(std::string num_str);
+
+  static std::string toFrench(std::string num_str);
 };

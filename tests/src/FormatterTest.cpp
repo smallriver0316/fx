@@ -28,6 +28,34 @@ TEST(FormatterTest, given_number_then_convert_to_english_expression)
       "12 quintillion 345 quadrillion 678 trillion 901 billion 234 million 567 thousand and 890");
 }
 
+TEST(FormatterTest, given_number_then_convert_to_german_expression)
+{
+  EXPECT_EQ(
+      Formatter::toGerman("12345678901234567890"),
+      "12 Trillionen 345 Billiarden 678 Billionen 901 Milliarden 234 Millionen 567tausend und 890");
+}
+
+TEST(FormatterTest, given_number_then_convert_to_spanish_expression)
+{
+  EXPECT_EQ(
+      Formatter::toSpanish("12345678901234567890"),
+      "12 trillón 345 bil millones 678 billón 901 mil millones 234 millón 567 mil y 890");
+}
+
+TEST(FormatterTest, given_number_then_convert_to_french_expression)
+{
+  EXPECT_EQ(
+      Formatter::toFrench("12345678901234567890"),
+      "12 trillions 345 billiards 678 billion 901 milliards 234 million 567 mille et 890");
+}
+
+TEST(FormatterTest, given_number_then_convert_to_japanese_expression)
+{
+  EXPECT_EQ(
+      Formatter::toJapanese("12345678901234567890"),
+      "1234京5678兆9012億3456万7890");
+}
+
 TEST(FormatterTest, given_number_with_decimal_part_then_split_into_integer_and_decimal_parts)
 {
   auto result = Formatter::splitNumStr("1234567890.1234567890");
