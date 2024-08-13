@@ -41,10 +41,15 @@ std::string Formatter::to1000sSepAsIs(std::string num_str)
     integer_part = num_str.substr(0, dot_pos);
     decimal_part = num_str.substr(dot_pos);
   }
-
-  for (int i = 3; i < integer_part.size(); i += 3)
+  else
   {
-    integer_part.insert(integer_part.size() - i, ",");
+    integer_part = num_str;
+  }
+
+  int size = integer_part.size();
+  for (int i = 3; i < size; i += 3)
+  {
+    integer_part.insert(size - i, ",");
   }
 
   return integer_part + decimal_part;
