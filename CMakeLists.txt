@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16.3)
 
 # it enable to refer project name as ${PROJECT_NAME}
 project(fx
-  VERSION 0.10
+  VERSION 1.0
   DESCRIPTION "CLI tool of converting number to foreign country style"
   LANGUAGES CXX)
 

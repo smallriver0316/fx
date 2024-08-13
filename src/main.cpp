@@ -14,7 +14,7 @@ int main(int argc, char **argv)
   argv = app.ensure_utf8(argv);
 
   // add version output
-  app.set_version_flag("-v,--version", "0.1.0");
+  app.set_version_flag("-v,--version", "1.0");
 
   // add format option
   std::string format;
