@@ -30,6 +30,7 @@ Release build will be done like below.
 ```bash
 # build
 mkdir build && cd build/
+# default type is Debug
 cmake -DCMAKE_BUILD_TYPE=Release ..
 make
 # install
