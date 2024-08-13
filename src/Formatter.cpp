@@ -32,6 +32,24 @@ std::string Formatter::to1000sSep(std::string num_str)
   return integer_part + (split_nums.second != "" ? "." + split_nums.second : "");
 }
 
+std::string Formatter::to1000sSepAsIs(std::string num_str)
+{
+  int dot_pos = num_str.find('.');
+  std::string integer_part, decimal_part = "";
+  if (dot_pos != std::string::npos)
+  {
+    integer_part = num_str.substr(0, dot_pos);
+    decimal_part = num_str.substr(dot_pos);
+  }
+
+  for (int i = 3; i < integer_part.size(); i += 3)
+  {
+    integer_part.insert(integer_part.size() - i, ",");
+  }
+
+  return integer_part + decimal_part;
+}
+
 std::string Formatter::toEnglish(std::string num_str)
 {
   auto split_nums = splitNumStr(num_str);

@@ -22,6 +22,8 @@ public:
 
   static std::string to1000sSep(std::string num_str);
 
+  static std::string to1000sSepAsIs(std::string num_str);
+
   static std::string toEnglish(std::string num_str);
 
   static std::string toGerman(std::string num_str);
