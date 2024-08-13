@@ -71,5 +71,5 @@ TEST(FormatterTest, given_number_with_decimal_part_and_trailing_zeros_then_cut_o
 
 TEST(FormatterTest, given_number_then_convert_to_thousands_separator_format_without_cut_off_trailing_digit)
 {
-  EXPECT_EQ(Formatter::to1000sSepAsIs("1234567890.123000"), "1,234,567,890.12300");
+  EXPECT_EQ(Formatter::to1000sSepAsIs("1234567890.123000"), "1,234,567,890.123000");
 }
