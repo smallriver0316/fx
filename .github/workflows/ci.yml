@@ -3,6 +3,7 @@ run-name: ${{ github.actor }} is testing out Github Actions 🚀
 on:
   pull_request:
     types:
+      - opened
       - synchronize
     branches:
       - main
