@@ -24,6 +24,11 @@ std::string FxInterface::exchange(std::string (*formatter)(std::string))
   return formatter(result);
 }
 
+std::string FxInterface::getOriginalNumString()
+{
+  return m_fx->getOriginalNumString();
+}
+
 std::string FxInterface::getInputCurrency()
 {
   if (m_input_currency.length() == 3)

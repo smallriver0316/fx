@@ -10,6 +10,8 @@ public:
   std::string exchange(std::string (*formatter)(std::string) = [](std::string s)
                        { return s; });
 
+  std::string getOriginalNumString();
+
   std::string getInputCurrency();
 
   std::string getOutputCurrency();

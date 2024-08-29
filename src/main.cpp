@@ -49,7 +49,7 @@ int main(int argc, char **argv)
     auto fx_interface = FxInterface(fx, input_currency, output_currency);
 
     // print input value
-    std::cout << "YOUR INPUT: " << Formatter::to1000sSepAsIs(fx->getOriginalNumString());
+    std::cout << "YOUR INPUT: " << Formatter::to1000sSepAsIs(fx_interface.getOriginalNumString());
     if (!fx_interface.getInputCurrency().empty())
     {
       std::cout << " " << fx_interface.getInputCurrency();
